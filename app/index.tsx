@@ -1,52 +1,97 @@
-import React, { useState } from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+
+import React from 'react';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { commonStyles, colors } from '../styles/commonStyles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import SimpleBottomSheet from '../components/BottomSheet';
-
+import { useRouter } from 'expo-router';
+import Icon from '../components/Icon';
 
 export default function MainScreen() {
-  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const router = useRouter();
 
-  const handleOpenBottomSheet = () => {
-    setIsBottomSheetVisible(true);
+  const handleOrganizerPress = () => {
+    console.log('Navigating to organizer screen');
+    router.push('/organizer');
+  };
+
+  const handleParticipantPress = () => {
+    console.log('Navigating to participant screen');
+    router.push('/participant');
   };
 
   return (
-      <SafeAreaView style={commonStyles.container}>
-        <View style={commonStyles.content}>
-          <Image
-            source={require('../assets/images/final_quest_240x240.png')}
-            style={{ width: 180, height: 180 }}
-            resizeMode="contain"
-          />
-          <Text style={commonStyles.title}>This is a placeholder app.</Text>
-          <Text style={commonStyles.text}>Your app will be displayed here when it's ready.</Text>
-
-          <TouchableOpacity
-            style={{
-              backgroundColor: colors.primary,
-              paddingHorizontal: 24,
-              paddingVertical: 12,
-              borderRadius: 8,
-              marginTop: 30,
-            }}
-            onPress={handleOpenBottomSheet}
-          >
-            <Text style={{
-              color: colors.text,
-              fontSize: 16,
-              fontWeight: '600',
-            }}>
-              Open Bottom Sheet
-            </Text>
-          </TouchableOpacity>
+    <SafeAreaView style={commonStyles.container}>
+      <View style={commonStyles.centerContent}>
+        <View style={styles.header}>
+          <Icon name="gift-outline" size={64} color={colors.primary} />
+          <Text style={commonStyles.title}>Task Draw</Text>
+          <Text style={[commonStyles.text, styles.subtitle]}>
+            Create unique tasks and let participants draw them randomly
+          </Text>
         </View>
 
-        <SimpleBottomSheet
-          isVisible={isBottomSheetVisible}
-          onClose={() => setIsBottomSheetVisible(false)}
-        />
-      </SafeAreaView>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.roleButton, styles.organizerButton]}
+            onPress={handleOrganizerPress}
+          >
+            <Icon name="create-outline" size={32} color={colors.background} />
+            <Text style={styles.roleButtonText}>I&apos;m an Organizer</Text>
+            <Text style={styles.roleButtonSubtext}>Create and manage tasks</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.roleButton, styles.participantButton]}
+            onPress={handleParticipantPress}
+          >
+            <Icon name="hand-left-outline" size={32} color={colors.background} />
+            <Text style={styles.roleButtonText}>I&apos;m a Participant</Text>
+            <Text style={styles.roleButtonSubtext}>Draw a task to complete</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    alignItems: 'center',
+    marginBottom: 60,
+  },
+  subtitle: {
+    textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+  },
+  buttonContainer: {
+    width: '100%',
+    maxWidth: 400,
+    gap: 20,
+  },
+  roleButton: {
+    padding: 24,
+    borderRadius: 16,
+    alignItems: 'center',
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+    elevation: 4,
+  },
+  organizerButton: {
+    backgroundColor: colors.primary,
+  },
+  participantButton: {
+    backgroundColor: colors.accent,
+  },
+  roleButtonText: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: colors.background,
+    marginTop: 12,
+    marginBottom: 4,
+  },
+  roleButtonSubtext: {
+    fontSize: 14,
+    color: colors.background + 'CC',
+    textAlign: 'center',
+  },
+});
